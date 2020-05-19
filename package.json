@@ -1,0 +1,24 @@
+{
+  "name": "pfh-p2p-videochat",
+  "version": "1.0.0",
+  "description": "",
+  "main": "index.js",
+  "scripts": {
+    "start": "budo index.js --live"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/oddestdan/pfh-p2p-videochat.git"
+  },
+  "keywords": [],
+  "author": "Dan Stetsenko <oddestdan@gmail.com>",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/oddestdan/pfh-p2p-videochat/issues"
+  },
+  "homepage": "https://github.com/oddestdan/pfh-p2p-videochat#readme",
+  "devDependencies": {
+    "budo": "^11.6.3",
+    "watchify": "^3.11.1"
+  }
+}
