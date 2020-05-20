@@ -2,9 +2,10 @@
   "name": "pfh-p2p-videochat",
   "version": "1.0.0",
   "description": "",
-  "main": "index.js",
+  "main": "main.js",
   "scripts": {
-    "start": "budo index.js --live"
+    "start": "nodemon server.js",
+    "watch": "npx watchify ./public/main.js -o ./public/bundle.js"
   },
   "repository": {
     "type": "git",
@@ -17,8 +18,13 @@
     "url": "https://github.com/oddestdan/pfh-p2p-videochat/issues"
   },
   "homepage": "https://github.com/oddestdan/pfh-p2p-videochat#readme",
+  "dependencies": {
+    "express": "^4.17.1",
+    "simple-peer": "^9.7.2",
+    "socket.io": "^2.3.0"
+  },
   "devDependencies": {
-    "budo": "^11.6.3",
+    "nodemon": "^2.0.4",
     "watchify": "^3.11.1"
   }
 }
