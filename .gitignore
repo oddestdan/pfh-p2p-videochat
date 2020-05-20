@@ -2,9 +2,6 @@
 /dist
 /tmp
 
-# temporary bundled js
-/public/bundle.js
-
 # dependencies
 /node_modules
 
