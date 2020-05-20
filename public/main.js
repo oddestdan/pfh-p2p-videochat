@@ -15,26 +15,22 @@ navigator.mediaDevices
     video.play();
 
     // Initialize a new Peer
-    function initPeer(type) {
+    function initPeer(isInit) {
       let peer = new Peer({
-        initiator: type === 'init',
+        initiator: isInit,
         stream,
         trickle: false,
       });
       peer.on('stream', (stream) => {
         createVideo(stream);
       });
-      peer.on('close', () => {
-        document.getElementById('peerVideo').remove();
-        peer.destroy();
-      });
       return peer;
     }
 
-    // Peer of type 'init'
+    // Peer is an initiator
     function makePeer() {
       client.gotAnswer = false;
-      const peer = initPeer('init');
+      const peer = initPeer(true);
 
       peer.on('signal', (data) => {
         if (!client.gotAnswer) {
@@ -46,13 +42,15 @@ navigator.mediaDevices
     }
 
     // When we receive an offer and have to send an answer,
-    // Peer NOT of type 'init'
+    // Peer is not an initiator
     function frontAnswer(offer) {
-      const peer = initPeer('notInit');
+      const peer = initPeer(false);
       peer.on('signal', (data) => {
         socket.emit('Answer', data);
       });
       peer.signal(offer);
+
+      client.peer = peer;
     }
 
     function signalAnswer(answer) {
@@ -62,14 +60,31 @@ navigator.mediaDevices
     }
 
     function createVideo(stream) {
+      configureVideoElement();
+
       let videoEl = document.createElement('video');
-      videoEl.id = 'peervideo';
+      videoEl.id = 'peerVideo';
       videoEl.srcObject = stream;
       document.querySelector('#peerContainer').appendChild(videoEl);
+
+      videoEl.play();
+
+      videoEl.addEventListener('click', () => {
+        console.log(videoEl.volume);
+        videoEl.volume = Number(!videoEl.volume); // toggle volume 0 <=> 1
+      });
     }
 
     function sessionActive() {
-      document.write('Session active. Please come back later');
+      document.write('Session is already full.');
+    }
+
+    function removePeer() {
+      document.getElementById('peerVideo').remove();
+      document.getElementById('muteText').remove();
+      if (client.peer) {
+        client.peer.destroy();
+      }
     }
 
     // Socket events
@@ -77,5 +92,13 @@ navigator.mediaDevices
     socket.on('BackAnswer', signalAnswer);
     socket.on('SessionActive', sessionActive);
     socket.on('CreatePeer', makePeer);
+    socket.on('Disconnect', removePeer);
   })
   .catch((err) => document.write(err));
+
+function configureVideoElement() {
+  const div = document.createElement('div');
+  div.id = 'muteText';
+  div.innerHTML = 'Click to Mute/Unmute';
+  document.querySelector('#peerContainer').appendChild(div);
+}
