@@ -4,7 +4,8 @@
   "description": "",
   "main": "main.js",
   "scripts": {
-    "start": "nodemon server.js",
+    "start": "node server.js",
+    "dev": "nodemon server.js",
     "watch": "npx watchify ./public/main.js -o ./public/bundle.js"
   },
   "repository": {
