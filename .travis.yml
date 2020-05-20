@@ -1,0 +1,12 @@
+language: node_js
+node_js:
+- '12'
+install: npm install
+branches:
+  only:
+  - master
+deploy:
+  provider: heroku
+  app: pfh-videochat
+  api_key:
+    secure: sAl3HMjeGtGnmub9gX3WDs08jzb41Znn2HpqBqZYcx78D8bJNyqy2KrHzcOribQH5AHPtb+zs9jBW8BFRFVmL6gS7SYehynPp2+scywj/j+rC/2vnCg/597vlclmVdXHFRFbS9V2RqC8b03cbNzmIPgKOBC1ighhH9266qZZonExz/V+DGy0XMw8zVEu4d2DQoHr7mY09f8swcteA0b6+WmNNGyztacDPbUABk+JqYaQ3G8pm97/YygZeZUMr6JnQYAxgxez+D5lqxBElcrzNM0YX8oKtXC25Go7Lbif31OP4DhkKzxYE7BKKsQynNxqeLk/1ou2Qm7zPIyvhIFdFv1feWPHx8Cn54e49vqkAJF4kbYy8Q6rxBEXGqow6FC42H0r0EDRSeZD3jznjwXzrEK9ZDNSP0C81N1E14u0vTCS0ZoblPMNkN1/MB9hKQBEW+WGIKX61p4+8QFwrOeKKfz6pX2SHTFMlEWVzOhbWBeNGrLYfsYiFxeajI4+YiWOcKAe63DPCJXSnzjjqF3m8J3eLZSHEr8CRGJj3aLc6kBOQOLYR+Y+lycKYDRiHZfUr3oZNoH2Rje4RBbhIRCkYkEgHn6Ngk9XmKYauHOiyQb07sNO/cnHQxMuE1gePfkCF8nlUCyXtcIf/+MbZbXnS664HvfEduhVFuqfKTwqmyk=
