@@ -1,5 +1,5 @@
 module.exports = function (socketIO) {
-  const MAX_PEER_AMOUNT = 2;
+  const MAX_PEER_AMOUNT = 3;
 
   let globalClients = 0;
 
@@ -18,7 +18,7 @@ module.exports = function (socketIO) {
 
     socket.on('Offer', sendOffer);
     socket.on('Answer', sendAnswer);
-    socket.on('Disconnect', disconnect);
+    socket.on('disconnect', disconnect);
   });
 
   function sendOffer(offer) {
@@ -32,7 +32,7 @@ module.exports = function (socketIO) {
   function disconnect() {
     if (globalClients > 0) {
       if (globalClients <= MAX_PEER_AMOUNT) {
-        this.broadcast.emit('Disconnect');
+        this.broadcast.emit('RemovePeer', 1); // hardcoded 1, needs to be dynamic
       }
       globalClients--;
     }

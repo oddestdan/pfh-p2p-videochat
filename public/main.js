@@ -11,13 +11,15 @@ navigator.mediaDevices
   })
   .then((stream) => {
     console.log('newClient...');
+
     socket.emit('NewClient');
     video.srcObject = stream;
     video.play();
 
     // Initialize a new Peer
     function initPeer(isInit) {
-      console.log('initPeer...');
+      console.log('initPeer | isInit:', isInit);
+
       const peer = new Peer({
         initiator: isInit,
         stream,
@@ -31,7 +33,8 @@ navigator.mediaDevices
 
     // Peer is an initiator
     function makePeer() {
-      console.log('makePeer...');
+      console.log('makePeer');
+
       client.gotAnswer = false;
       const peer = initPeer(true);
 
@@ -47,7 +50,9 @@ navigator.mediaDevices
     // When we receive an offer and have to send an answer,
     // Peer is not an initiator
     function frontAnswer(offer) {
-      console.log('frontAnswer...');
+      console.log('frontAnswer | offer below');
+      console.log(offer);
+
       const peer = initPeer(false);
       peer.on('signal', (data) => {
         socket.emit('Answer', data);
@@ -58,26 +63,31 @@ navigator.mediaDevices
     }
 
     function signalAnswer(answer) {
-      console.log('signalAnswer...');
+      console.log('signalAnswer | answer below');
+      console.log(answer);
+
       client.gotAnswer = true;
       let peer = client.peer;
       peer.signal(answer);
     }
 
     function createVideo(stream) {
-      console.log('createVideo...');
-      configureMuteToggleElement();
+      console.log('createVideo | stream below');
+      console.log(stream);
+
+      const peerId = 1;
+      configureMuteToggleElement(peerId);
 
       let videoEl = document.createElement('video');
-      videoEl.id = 'peerVideo';
+      videoEl.id = `peerVideo${peerId}`;
       videoEl.srcObject = stream;
-      document.querySelector('#peerContainer').appendChild(videoEl);
+      document.querySelector(`#peer${peerId}`).appendChild(videoEl);
 
       videoEl.play();
 
       videoEl.addEventListener('click', () => {
-        console.log(`Volume: ${videoEl.volume}`);
         videoEl.volume = Number(!videoEl.volume); // toggle volume 0 <=> 1
+        console.log(`Change volume to ${videoEl.volume}`);
       });
     }
 
@@ -85,12 +95,11 @@ navigator.mediaDevices
       document.write('Session is already full.');
     }
 
-    function removePeer() {
-      console.log('removePeer...');
-      console.log(client);
-      console.log(client.peer);
-      document.getElementById('peerVideo').remove();
-      document.getElementById('muteText').remove();
+    function removePeer(peerId) {
+      console.log('removePeer | peerId:', peerId);
+
+      document.getElementById(`peerVideo${peerId}`).remove();
+      document.getElementById(`muteText${peerId}`).remove();
       if (client.peer) {
         client.peer.destroy();
       }
@@ -101,13 +110,13 @@ navigator.mediaDevices
     socket.on('BackAnswer', signalAnswer);
     socket.on('SessionActive', sessionActive);
     socket.on('CreatePeer', makePeer);
-    socket.on('Disconnect', removePeer);
+    socket.on('RemovePeer', removePeer);
   })
   .catch((err) => document.write(err));
 
-function configureMuteToggleElement() {
+function configureMuteToggleElement(peerId) {
   const muteToggle = document.createElement('div');
-  muteToggle.id = 'muteText';
+  muteToggle.id = `muteText${peerId}`;
   muteToggle.innerHTML = 'Click to Mute/Unmute';
-  document.querySelector('#peerContainer').appendChild(muteToggle);
+  document.getElementById(`peer${peerId}`).appendChild(muteToggle);
 }
